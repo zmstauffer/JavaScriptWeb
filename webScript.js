@@ -7,7 +7,7 @@ const ctx = canvas.getContext('2d');
 const MOUSE_RADIUS = .0075;                   //area of effect for mouse
 const MAX_PARTICLES = .00015;                 //how many particles
 const CONNECTING_BAR_LENGTH = .0065;          //how long are the "bars" that connect the dots
-const MAX_SIZE = 5;
+const MIN_SIZE = 5;
 const MIN_SPEED = 5;
 
 canvas.width = window.innerWidth;
