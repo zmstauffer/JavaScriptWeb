@@ -210,8 +210,8 @@ var MAX_PARTICLES = .00015; //how many particles
 
 var CONNECTING_BAR_LENGTH = .0065; //how long are the "bars" that connect the dots
 
-var MIN_SIZE = 5;
-var MIN_SPEED = 3;
+var MAX_SIZE = 5;
+var MIN_SPEED = 5;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 var particles = []; //array to hold particles
@@ -242,9 +242,9 @@ function createParticles() {
   var numParticles = canvas.height * canvas.width * MAX_PARTICLES;
 
   for (var i = 0; i < numParticles; i++) {
-    var size = Math.random() * MIN_SIZE + 1;
-    var x = Math.random() * innerWidth - MIN_SIZE * 2;
-    var y = Math.random() * innerHeight - MIN_SIZE * 2;
+    var size = Math.random() * MAX_SIZE + 1;
+    var x = Math.random() * innerWidth - MAX_SIZE * 2;
+    var y = Math.random() * innerHeight - MAX_SIZE * 2;
     var velocityX = Math.random() * MIN_SPEED - MIN_SPEED / 2;
     var velocityY = Math.random() * MIN_SPEED - MIN_SPEED / 2;
     var color = "#2baba9";

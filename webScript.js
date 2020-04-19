@@ -6,8 +6,8 @@ const ctx = canvas.getContext('2d');
 const MOUSE_RADIUS = .0075;                   //area of effect for mouse
 const MAX_PARTICLES = .00015;                 //how many particles
 const CONNECTING_BAR_LENGTH = .0065;          //how long are the "bars" that connect the dots
-const MIN_SIZE = 5;
-const MIN_SPEED = 3;
+const MAX_SIZE = 5;
+const MIN_SPEED = 5;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -41,9 +41,9 @@ function createParticles(){
     particles = []
     const numParticles = (canvas.height * canvas.width) * MAX_PARTICLES;
     for (let i = 0; i < numParticles; i++){
-        let size = Math.random() * MIN_SIZE + 1;
-        let x = Math.random() * innerWidth - MIN_SIZE * 2;
-        let y = Math.random() * innerHeight - MIN_SIZE*2;
+        let size = Math.random() * MAX_SIZE + 1;
+        let x = Math.random() * innerWidth - MAX_SIZE * 2;
+        let y = Math.random() * innerHeight - MAX_SIZE*2;
         let velocityX = Math.random() * MIN_SPEED - MIN_SPEED/2;
         let velocityY = Math.random() * MIN_SPEED - MIN_SPEED/2;
         let color = "#2baba9";
