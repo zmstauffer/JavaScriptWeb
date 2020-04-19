@@ -1,4 +1,4 @@
-import Particle from "./particles";
+import Particle from "./Particles";
 
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
