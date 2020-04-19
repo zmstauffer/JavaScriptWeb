@@ -1,4 +1,5 @@
 import Rectangle from "./Rectangle.js";
+import Point from "./Point.js";
 
 export default class QuadTree {
   constructor(boundary, n) {
@@ -11,18 +12,20 @@ export default class QuadTree {
   subdivide() {
     const x = this.boundary.x; //setup some local vars to make code more readable (hopefully)
     const y = this.boundary.y;
-    const width = this.boundary.width;
-    const height = this.boundary.height;
+    const halfWidth = this.boundary.width / 2;
+    const halfHeight = this.boundary.height / 2;
 
-    const NERect = new Rectangle(x + width / 2, y - height / 2, width / 2, height / 2);
-    const NWRect = new Rectangle(x - width / 2, y - height / 2, width / 2, height / 2);
-    const SERect = new Rectangle(x + width / 2, y + height / 2, width / 2, height / 2);
-    const SWRect = new Rectangle(x - width / 2, y + height / 2, width / 2, height / 2);
+    const NERect = new Rectangle(x + halfWidth, y - halfHeight, halfWidth, halfHeight);
+    const NWRect = new Rectangle(x - halfWidth, y - halfHeight, halfWidth, halfHeight);
+    const SERect = new Rectangle(x + halfWidth, y + halfHeight, halfWidth, halfHeight);
+    const SWRect = new Rectangle(x - halfWidth, y + halfHeight, halfWidth, halfHeight);
 
     this.northEast = new QuadTree(NERect, this.capacity);
     this.northWest = new QuadTree(NWRect, this.capacity);
     this.southEast = new QuadTree(SERect, this.capacity);
     this.southWest = new QuadTree(SWRect, this.capacity);
+
+    this.divided = true;
   }
 
   insert(point) {
@@ -44,8 +47,8 @@ export default class QuadTree {
     if (!found) {
       found = [];
     }
-    if (!this.boundary.intersects(range)) {
-      return;
+    if (!range.intersects(this.boundary)) {
+      return found;
     } else {
       for (let p of this.points) {
         if (range.contains(p)) {
@@ -60,5 +63,18 @@ export default class QuadTree {
       }
     }
     return found;
+  }
+
+  draw(ctx){
+    ctx.beginPath();
+    ctx.rect(this.boundary.x - this.boundary.width, this.boundary.y - this.boundary.height, this.boundary.width*2, this.boundary.height*2);
+    ctx.stroke();
+
+    if (this.divided){
+      this.northEast.draw(ctx);
+      this.northWest.draw(ctx);
+      this.southEast.draw(ctx);
+      this.southWest.draw(ctx);
+    }
   }
 }

@@ -117,79 +117,85 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/parcel/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"Particles.js":[function(require,module,exports) {
+"use strict";
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Particle = /*#__PURE__*/function () {
+  function Particle(x, y, velocityX, velocityY, radius, color) {
+    _classCallCheck(this, Particle);
+
+    this.x = x;
+    this.y = y;
+    this.velocityX = velocityX;
+    this.veloctyY = velocityY;
+    this.r = radius;
+    this.color = color;
+    this.dodge = 7.5; //how much the particle tries to dodge the mouse
   }
 
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
+  _createClass(Particle, [{
+    key: "draw",
+    value: function draw(ctx) {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 2, 0, Math.PI * 2, false);
+      ctx.fillStyle = this.color;
+      ctx.fill();
     }
-  }
+  }, {
+    key: "update",
+    value: function update(mouse) {
+      if (this.x < 0 || this.x > window.innerWidth) this.velocityX *= -1; //flip direction moving when approaching window
 
-  return '/';
-}
+      if (this.y < 0 || this.y > window.innerHeight) this.veloctyY *= -1;
+      var distance = this.calcDistance(mouse.x, mouse.y);
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
+      if (distance < mouse.radius + this.r) {
+        if (mouse.x < this.x) {
+          this.x += this.dodge;
+        } else {
+          this.x -= this.dodge;
+        }
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
+        if (mouse.y < this.y) {
+          this.y += this.dodge;
+        } else {
+          this.y -= this.dodge;
+        }
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
+        if (this.x < 0) this.x = 0 + this.r / 2;
+        if (this.x > window.innerWidth) this.x = window.innerWidth - this.r / 2;
+        if (this.y < 0) this.y = 0 + this.r / 2;
+        if (this.y > window.innerHeight) this.y = window.innerHeight - this.r / 2;
+      } else {
+        this.x += this.velocityX;
+        this.y += this.veloctyY;
       }
     }
+  }, {
+    key: "calcDistance",
+    value: function calcDistance(otherX, otherY) {
+      var deltaX = otherX - this.x;
+      var deltaY = otherY - this.y;
+      return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    }
+  }]);
 
-    cssTimeout = null;
-  }, 50);
-}
+  return Particle;
+}();
 
-module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel/src/builtins/css-loader.js"}],"node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+exports.default = Particle;
+},{}],"node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -393,5 +399,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/style.e308ff8e.js.map
+},{}]},{},["node_modules/parcel/src/builtins/hmr-runtime.js","Particles.js"], null)
+//# sourceMappingURL=/Particles.0936a3a0.js.map
