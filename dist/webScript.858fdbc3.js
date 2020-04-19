@@ -233,8 +233,8 @@ window.addEventListener('resize', function (event) {
   createParticles();
 });
 window.addEventListener('mouseout', function (event) {
-  mouse.x = null;
-  mouse.y = null;
+  mouse.x = undefined;
+  mouse.y = undefined;
 });
 
 function createParticles() {

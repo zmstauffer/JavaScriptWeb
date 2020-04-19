@@ -1,4 +1,5 @@
-import Particle from "./particles";
+import Particle from "./Particles.js";
+import QuadTree from "./QuadTree.js";
 
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
@@ -33,8 +34,8 @@ window.addEventListener('resize', function (event) {
 });
 
 window.addEventListener('mouseout', function (event) {
-    mouse.x = null;
-    mouse.y = null;
+    mouse.x = undefined;
+    mouse.y = undefined;
 });
 
 function createParticles(){
