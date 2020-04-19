@@ -7,7 +7,7 @@ const MOUSE_RADIUS = .0075;                   //area of effect for mouse
 const MAX_PARTICLES = .00015;                 //how many particles
 const CONNECTING_BAR_LENGTH = .0065;          //how long are the "bars" that connect the dots
 const MIN_SIZE = 5;
-const MIN_SPEED = 3;
+const MIN_SPEED = 5;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -33,8 +33,8 @@ window.addEventListener('resize', function (event) {
 });
 
 window.addEventListener('mouseout', function (event) {
-    mouse.x = null;
-    mouse.y = null;
+    mouse.x = undefined;
+    mouse.y = undefined;
 });
 
 function createParticles(){
