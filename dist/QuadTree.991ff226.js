@@ -288,6 +288,7 @@ var QuadTree = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw(ctx) {
+      ctx.strokeStyle = "#fff";
       ctx.beginPath();
       ctx.rect(this.boundary.x - this.boundary.width, this.boundary.y - this.boundary.height, this.boundary.width * 2, this.boundary.height * 2);
       ctx.stroke();
@@ -333,7 +334,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61929" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58865" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

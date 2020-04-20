@@ -366,6 +366,7 @@ var QuadTree = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw(ctx) {
+      ctx.strokeStyle = "#fff";
       ctx.beginPath();
       ctx.rect(this.boundary.x - this.boundary.width, this.boundary.y - this.boundary.height, this.boundary.width * 2, this.boundary.height * 2);
       ctx.stroke();
@@ -463,10 +464,11 @@ var MAX_PARTICLES = 0.0002; //how many particles
 
 var CONNECTING_BAR_LENGTH = 0.0065; //how long are the "bars" that connect the dots
 
-var MIN_RADIUS = 2.5;
-var MIN_SPEED = 6;
-var DEFAULT_SPLIT_COUNT = 4; //how many particles per quadtree before it splits
+var MIN_RADIUS = 2;
+var MIN_SPEED = 5;
+var DEFAULT_SPLIT_COUNT = 10; //how many particles per quadtree before it splits
 
+var debug = false;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight; //create QuadTree
 
@@ -571,6 +573,8 @@ function connectParticles() {
       _iterator.f();
     }
   }
+
+  if (debug) qtree.draw(ctx);
 }
 
 createParticles();
@@ -603,7 +607,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61929" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58865" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

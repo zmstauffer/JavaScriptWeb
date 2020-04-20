@@ -10,9 +10,10 @@ const ctx = canvas.getContext("2d");
 const MOUSE_RADIUS = 0.0075; //area of effect for mouse
 const MAX_PARTICLES = 0.0002; //how many particles
 const CONNECTING_BAR_LENGTH = 0.0065; //how long are the "bars" that connect the dots
-const MIN_RADIUS = 2.5;
-const MIN_SPEED = 6;
-const DEFAULT_SPLIT_COUNT = 4; //how many particles per quadtree before it splits
+const MIN_RADIUS = 2;
+const MIN_SPEED = 5;
+const DEFAULT_SPLIT_COUNT = 10; //how many particles per quadtree before it splits
+const debug = false;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -105,6 +106,8 @@ function connectParticles() {
       }
     }
   }
+  
+  if (debug) qtree.draw(ctx);
 }
 
 createParticles();

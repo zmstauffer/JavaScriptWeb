@@ -66,6 +66,7 @@ export default class QuadTree {
   }
 
   draw(ctx){
+    ctx.strokeStyle = "#fff";
     ctx.beginPath();
     ctx.rect(this.boundary.x - this.boundary.width, this.boundary.y - this.boundary.height, this.boundary.width*2, this.boundary.height*2);
     ctx.stroke();
