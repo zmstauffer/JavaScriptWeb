@@ -160,7 +160,7 @@ var Particle = /*#__PURE__*/function () {
       if (this.y < 0 || this.y > window.innerHeight) this.veloctyY *= -1;
       var distance = this.calcDistance(mouse.x, mouse.y);
 
-      if (distance < mouse.radius + this.r) {
+      if (distance < Math.pow(mouse.radius, 2) + Math.pow(this.r, 2)) {
         if (mouse.x < this.x) {
           this.x += this.dodge;
         } else {
@@ -187,7 +187,7 @@ var Particle = /*#__PURE__*/function () {
     value: function calcDistance(otherX, otherY) {
       var deltaX = otherX - this.x;
       var deltaY = otherY - this.y;
-      return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      return deltaX * deltaX + deltaY * deltaY;
     }
   }]);
 
@@ -306,6 +306,22 @@ var QuadTree = /*#__PURE__*/function () {
       this.northWest = new QuadTree(NWRect, this.capacity);
       this.southEast = new QuadTree(SERect, this.capacity);
       this.southWest = new QuadTree(SWRect, this.capacity);
+
+      var _iterator = _createForOfIteratorHelper(this.points),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var p = _step.value;
+          this.northEast.insert(p) || this.northWest.insert(p) || this.southEast.insert(p) || this.southWest.insert(p);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      this.points = [];
       this.divided = true;
     }
   }, {
@@ -336,28 +352,28 @@ var QuadTree = /*#__PURE__*/function () {
       if (!range.intersects(this.boundary)) {
         return found;
       } else {
-        var _iterator = _createForOfIteratorHelper(this.points),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var p = _step.value;
-
-            if (range.contains(p)) {
-              found.push(p);
-            }
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-
         if (this.divided) {
           this.northWest.query(range, found);
           this.northEast.query(range, found);
           this.southWest.query(range, found);
           this.southEast.query(range, found);
+        } else {
+          var _iterator2 = _createForOfIteratorHelper(this.points),
+              _step2;
+
+          try {
+            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+              var p = _step2.value;
+
+              if (range.contains(p)) {
+                found.push(p);
+              }
+            }
+          } catch (err) {
+            _iterator2.e(err);
+          } finally {
+            _iterator2.f();
+          }
         }
       }
 
@@ -460,13 +476,13 @@ var canvas = document.getElementById("mainCanvas");
 var ctx = canvas.getContext("2d");
 var MOUSE_RADIUS = 0.0075; //area of effect for mouse
 
-var MAX_PARTICLES = 0.0002; //how many particles
+var MAX_PARTICLES = 0.000175; //how many particles
 
-var CONNECTING_BAR_LENGTH = 0.0065; //how long are the "bars" that connect the dots
+var CONNECTING_BAR_LENGTH = 0.0058; //how long are the "bars" that connect the dots
 
 var MIN_RADIUS = 2;
 var MIN_SPEED = 5;
-var DEFAULT_SPLIT_COUNT = 10; //how many particles per quadtree before it splits
+var DEFAULT_SPLIT_COUNT = 15; //how many particles per quadtree before it splits
 
 var debug = false;
 canvas.width = window.innerWidth;
@@ -523,12 +539,14 @@ function mainLoop() {
 
   connectParticles();
   requestAnimationFrame(mainLoop);
+  refreshLoop();
 }
 
 function connectParticles() {
-  //create QuadTree
-  var boundary = new _Rectangle.default(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height);
-  var qtree = new _QuadTree.default(boundary, DEFAULT_SPLIT_COUNT);
+  //let boundary = new Rectangle(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height);
+  //let qtree = new QuadTree(boundary, DEFAULT_SPLIT_COUNT); 
+  var boundary = new _Rectangle.default(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2);
+  var qtree = new _QuadTree.default(boundary, DEFAULT_SPLIT_COUNT); //put particles into quadtree
 
   for (var _i2 = 0, _particles2 = particles; _i2 < _particles2.length; _i2++) {
     var p = _particles2[_i2];
@@ -557,8 +575,8 @@ function connectParticles() {
 
         var distance = _p.calcDistance(match.x, match.y);
 
-        if (_p !== match && distance <= maxDistance) {
-          opacity = 1 - distance / maxDistance;
+        if (_p !== match && distance <= Math.pow(maxDistance, 2)) {
+          opacity = 1 - distance / Math.pow(maxDistance, 2);
           ctx.strokeStyle = "rgba(43,171,169," + opacity + ")";
           ctx.lineWidth = 1;
           ctx.beginPath();
@@ -577,6 +595,37 @@ function connectParticles() {
   if (debug) qtree.draw(ctx);
 }
 
+var times = [];
+var fps;
+var loopCounter = 0;
+
+function refreshLoop() {
+  loopCounter++;
+  var now = performance.now();
+
+  while (times.length > 0 && times[0] <= now - 1000) {
+    times.shift();
+  }
+
+  times.push(now);
+  fps = " " + times.length;
+  ctx.fillStyle = "black";
+  ctx.fillRect(20, 20, 30, 30);
+  ctx.fillStyle = "white";
+  ctx.fillText(fps, 26, 40, 28, 28);
+  /*     //try to keep fps at 60
+      if (loopCounter >=100){
+        if (fps < 60){
+          //first reduce connecting distance
+          CONNECTING_BAR_LENGTH -= .000001
+          //delete a particle
+          particles.pop();
+          loopCounter = 75;
+        }
+      } */
+}
+
+refreshLoop();
 createParticles();
 mainLoop();
 },{"./Particles.js":"Particles.js","./QuadTree.js":"QuadTree.js","./Rectangle.js":"Rectangle.js","./Point.js":"Point.js","./Circle.js":"Circle.js"}],"node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -607,7 +656,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58865" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59514" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

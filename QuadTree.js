@@ -25,6 +25,11 @@ export default class QuadTree {
     this.southEast = new QuadTree(SERect, this.capacity);
     this.southWest = new QuadTree(SWRect, this.capacity);
 
+    for (let p of this.points) {
+      this.northEast.insert(p) || this.northWest.insert(p) || this.southEast.insert(p) || this.southWest.insert(p);
+    }
+
+    this.points = [];
     this.divided = true;
   }
 
@@ -50,28 +55,29 @@ export default class QuadTree {
     if (!range.intersects(this.boundary)) {
       return found;
     } else {
-      for (let p of this.points) {
-        if (range.contains(p)) {
-          found.push(p);
-        }
-      }
       if (this.divided) {
         this.northWest.query(range, found);
         this.northEast.query(range, found);
         this.southWest.query(range, found);
         this.southEast.query(range, found);
+      } else {
+        for (let p of this.points) {
+          if (range.contains(p)) {
+            found.push(p);
+          }
+        }
       }
     }
     return found;
   }
 
-  draw(ctx){
+  draw(ctx) {
     ctx.strokeStyle = "#fff";
     ctx.beginPath();
-    ctx.rect(this.boundary.x - this.boundary.width, this.boundary.y - this.boundary.height, this.boundary.width*2, this.boundary.height*2);
+    ctx.rect(this.boundary.x - this.boundary.width, this.boundary.y - this.boundary.height, this.boundary.width * 2, this.boundary.height * 2);
     ctx.stroke();
 
-    if (this.divided){
+    if (this.divided) {
       this.northEast.draw(ctx);
       this.northWest.draw(ctx);
       this.southEast.draw(ctx);

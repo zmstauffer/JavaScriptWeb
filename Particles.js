@@ -21,7 +21,7 @@ export default class Particle {
     if (this.y < 0 || this.y > window.innerHeight) this.veloctyY *= -1;
 
     const distance = this.calcDistance(mouse.x, mouse.y);
-    if (distance < mouse.radius + this.r) {
+    if (distance < mouse.radius**2 + this.r**2) {
       if (mouse.x < this.x) {
         this.x += this.dodge;
       } else {
@@ -46,6 +46,6 @@ export default class Particle {
   calcDistance(otherX, otherY) {
     let deltaX = otherX - this.x;
     let deltaY = otherY - this.y;
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    return deltaX * deltaX + deltaY * deltaY;
   }
 }

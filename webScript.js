@@ -8,11 +8,11 @@ const canvas = document.getElementById("mainCanvas");
 const ctx = canvas.getContext("2d");
 
 const MOUSE_RADIUS = 0.0075; //area of effect for mouse
-const MAX_PARTICLES = 0.0002; //how many particles
-const CONNECTING_BAR_LENGTH = 0.0065; //how long are the "bars" that connect the dots
+const MAX_PARTICLES = 0.000175; //how many particles
+let CONNECTING_BAR_LENGTH = 0.0058; //how long are the "bars" that connect the dots
 const MIN_RADIUS = 2;
 const MIN_SPEED = 5;
-const DEFAULT_SPLIT_COUNT = 10; //how many particles per quadtree before it splits
+const DEFAULT_SPLIT_COUNT = 15; //how many particles per quadtree before it splits
 const debug = false;
 
 canvas.width = window.innerWidth;
@@ -60,6 +60,8 @@ function createParticles() {
     let color = "#2baba9";
     particles.push(new Particle(x, y, velocityX, velocityY, size, color));
   }
+  
+
 }
 
 function mainLoop() {
@@ -70,13 +72,17 @@ function mainLoop() {
   }
   connectParticles();
   requestAnimationFrame(mainLoop);
+  refreshLoop();
 }
 
 function connectParticles() {
-  //create QuadTree
-  let boundary = new Rectangle(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height);
+  //let boundary = new Rectangle(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height);
+  //let qtree = new QuadTree(boundary, DEFAULT_SPLIT_COUNT); 
+
+  let boundary = new Rectangle(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2);
   let qtree = new QuadTree(boundary, DEFAULT_SPLIT_COUNT);
 
+  //put particles into quadtree
   for (let p of particles) {
     let point = new Point(p.x, p.y, p);
     qtree.insert(point);
@@ -95,8 +101,8 @@ function connectParticles() {
     for (let match of matches) {
       let distance = p.calcDistance(match.x, match.y);
 
-      if (p !== match && distance <= maxDistance) {
-        opacity = 1 - distance / maxDistance;
+      if (p !== match && distance <= maxDistance**2) {
+        opacity = 1 - distance / maxDistance**2;
         ctx.strokeStyle = "rgba(43,171,169," + opacity + ")";
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -110,5 +116,37 @@ function connectParticles() {
   if (debug) qtree.draw(ctx);
 }
 
+const times = [];
+let fps;
+let loopCounter = 0;
+
+function refreshLoop() {
+    loopCounter++;
+  const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
+    }
+    times.push(now);
+    fps = " " + times.length;
+
+    ctx.fillStyle="black";
+    ctx.fillRect(20,20,30,30);
+    ctx.fillStyle="white";
+    ctx.fillText(fps,26,40, 28,28);
+
+/*     //try to keep fps at 60
+    if (loopCounter >=100){
+      if (fps < 60){
+        //first reduce connecting distance
+        CONNECTING_BAR_LENGTH -= .000001
+        //delete a particle
+        particles.pop();
+        loopCounter = 75;
+      }
+    } */
+
+}
+
+refreshLoop();
 createParticles();
 mainLoop();

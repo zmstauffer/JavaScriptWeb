@@ -228,6 +228,22 @@ var QuadTree = /*#__PURE__*/function () {
       this.northWest = new QuadTree(NWRect, this.capacity);
       this.southEast = new QuadTree(SERect, this.capacity);
       this.southWest = new QuadTree(SWRect, this.capacity);
+
+      var _iterator = _createForOfIteratorHelper(this.points),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var p = _step.value;
+          this.northEast.insert(p) || this.northWest.insert(p) || this.southEast.insert(p) || this.southWest.insert(p);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      this.points = [];
       this.divided = true;
     }
   }, {
@@ -258,28 +274,28 @@ var QuadTree = /*#__PURE__*/function () {
       if (!range.intersects(this.boundary)) {
         return found;
       } else {
-        var _iterator = _createForOfIteratorHelper(this.points),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var p = _step.value;
-
-            if (range.contains(p)) {
-              found.push(p);
-            }
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-
         if (this.divided) {
           this.northWest.query(range, found);
           this.northEast.query(range, found);
           this.southWest.query(range, found);
           this.southEast.query(range, found);
+        } else {
+          var _iterator2 = _createForOfIteratorHelper(this.points),
+              _step2;
+
+          try {
+            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+              var p = _step2.value;
+
+              if (range.contains(p)) {
+                found.push(p);
+              }
+            }
+          } catch (err) {
+            _iterator2.e(err);
+          } finally {
+            _iterator2.f();
+          }
         }
       }
 
@@ -334,7 +350,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58865" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59514" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -160,7 +160,7 @@ var Particle = /*#__PURE__*/function () {
       if (this.y < 0 || this.y > window.innerHeight) this.veloctyY *= -1;
       var distance = this.calcDistance(mouse.x, mouse.y);
 
-      if (distance < mouse.radius + this.r) {
+      if (distance < Math.pow(mouse.radius, 2) + Math.pow(this.r, 2)) {
         if (mouse.x < this.x) {
           this.x += this.dodge;
         } else {
@@ -187,7 +187,7 @@ var Particle = /*#__PURE__*/function () {
     value: function calcDistance(otherX, otherY) {
       var deltaX = otherX - this.x;
       var deltaY = otherY - this.y;
-      return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      return deltaX * deltaX + deltaY * deltaY;
     }
   }]);
 
@@ -223,7 +223,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58865" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59514" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
