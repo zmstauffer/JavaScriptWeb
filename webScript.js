@@ -9,7 +9,7 @@ const ctx = canvas.getContext("2d");
 
 const MOUSE_RADIUS = 0.0075; //area of effect for mouse
 const MAX_PARTICLES = 0.000175; //how many particles
-let CONNECTING_BAR_LENGTH = 0.1; //how long are the "bars" that connect the dots
+let CONNECTING_BAR_LENGTH = 0.0058; //how long are the "bars" that connect the dots
 const MIN_RADIUS = 2;
 const MIN_SPEED = 5;
 const DEFAULT_SPLIT_COUNT = 15; //how many particles per quadtree before it splits
@@ -134,16 +134,16 @@ function refreshLoop() {
     ctx.fillStyle="white";
     ctx.fillText(fps,26,40, 28,28);
 
-/*     //try to keep fps at 60
+    //try to keep fps at 60
     if (loopCounter >=100){
-      if (fps < 60){
+      if (fps < 40){
         //first reduce connecting distance
         CONNECTING_BAR_LENGTH -= .000001
         //delete a particle
         particles.pop();
         loopCounter = 75;
       }
-    } */
+    } 
 
 }
 
