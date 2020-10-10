@@ -143,6 +143,10 @@ function refreshLoop() {
         particles.pop();
         loopCounter = 75;
       }
+      if (fps > 50){
+        CONNECTING_BAR_LENGTH += .000001
+        particles.push();
+        loopCounter = 75;
     } 
 
 }
