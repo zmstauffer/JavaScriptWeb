@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/zmstauffer/JavaScriptWeb#readme",
   "dependencies": {
-    "parcel": "^1.12.4"
+    "parcel": "^2.8.2"
   }
 }
